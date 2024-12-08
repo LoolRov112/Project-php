@@ -1,0 +1,60 @@
+* {
+  font-family: Karantina;
+}
+
+/* container של ה-nav */
+.navContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-bottom: 2em;
+}
+
+/* navbar עצמו */
+nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border: 0.2em solid linear-gradient(#f7e400, #4b7f3f, #6dbe45);
+  border-radius: 50px;
+  width: 100%;
+  background: linear-gradient(#f7e400, #4b7f3f, #6dbe45);
+  position: fixed;
+  top: 0; /* נשאר בקצה העליון של המסך */
+  z-index: 1000;
+  padding: 0.5em;
+  margin: 0; /* מונע רווחים מיותרים */
+}
+
+/* list של הקישורים */
+ul {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  gap: 2em;
+}
+
+/* סגנון של פריטי רשימה */
+li {
+  padding: 0 1em;
+  font-size: 2em;
+  transition: transform 0.5s;
+}
+
+/* אפקט hover על פריטי הרשימה */
+li:hover {
+  transform: scale(1.5);
+}
+
+li:hover a {
+  color: #171614;
+}
+
+/* קישורים */
+a {
+  text-decoration: none;
+  color: #f7f7ff;
+}
