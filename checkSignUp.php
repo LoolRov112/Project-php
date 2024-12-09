@@ -22,8 +22,8 @@ function compareByFirstName($a, $b) {
 if (isset($_POST['sort'])) {
     usort($users, 'compareByFirstName');
     echo "<pre>";
-print_r($users);
-echo "</pre>";
+    print_r($users);
+    echo "</pre>";
 } 
 
 ?>

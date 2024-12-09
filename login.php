@@ -2,39 +2,23 @@
 include 'usersArray.php';
 session_start();
 
-$users = [
-    "מוזס" => [
-        "user_name" => "מוזס",
-        "first_name" => "משה",
-        "last_name" => "כהן",
-        "password" => "password123",
-        "email" => "moshe@example.com",
-    ],
-    "דייויד" => [
-        "user_name" => "דייויד",
-        "first_name" => "דוד",
-        "last_name" => "לוי",
-        "password" => "password456",
-        "email" => "david@example.com",
-    ],
-];
 
 if (!isset($_SESSION['attempts'])) {
     $_SESSION['attempts'] = 0;
 }
 
 
-if ($_SESSION['attempts'] > 3) {
+if ($_SESSION['attempts'] >= 3) {
     echo "<p>הגעת למספר הניסיונות המרבי. אנא נסה מאוחר יותר.</p>";
     session_unset();
     exit; 
 }
 
-if (isset($_POST['userName']) || isset($_POST['password'])) {
-    $userName = $_POST['userName'];
+if (isset($_POST['user_name']) && isset($_POST['password'])) {
+    $user_name = $_POST['user_name'];
     $password = $_POST['password'];
 
-    if (isset($users[$userName]) && $users[$userName]['password'] === $password) {
+    if (isset($users[$user_name]) && $users[$user_name]['password'] === $password) {
         $_SESSION['attempts'] = 0;
         header("Location: home1.php"); 
         exit;
@@ -114,7 +98,7 @@ if (isset($_POST['userName']) || isset($_POST['password'])) {
         <h1>כניסה לאתר משק 95</h1>
         <form action="" method="post" name="login">
             שם משתמש: </br>
-            <input type="text" name="userName" required /><br /><br />
+            <input type="text" name="user_name" required /><br /><br />
             סיסמה: </br>
             <input type="password" name="password" required /><br /><br />
             <input type="submit" value="כניסה" />
