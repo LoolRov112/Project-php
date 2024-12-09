@@ -85,7 +85,7 @@ input[type="submit"]:hover {
     <input type="text" name="address" required /><br /><br />
     סיסמה: </br>
     <input type="password" name="password" required /><br /><br />
-    <input type="submit" value="הירשם" />
+    <input type="submit" name="submit" value="הירשם" />
 </form>
 <p id="p1"> </p>
 </center>
