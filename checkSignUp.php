@@ -2,15 +2,12 @@
 include 'usersArray.php';
 
 function compareByFirstName($a, $b) {
-    // השוואת שני המשתמשים לפי השם הפרטי
     return strcmp($a['first_name'], $b['first_name']);
 }
 
-// אם הכפתור נלחץ, נבצע מיון
 if (isset($_POST['sort'])) {
-    // מיון המערך לפי שם פרטי (first_name) של כל משתמש
     usort($users, 'compareByFirstName');
-}   qwe45
+} 
 
 
 $newUser = array();
