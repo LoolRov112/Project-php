@@ -14,18 +14,21 @@ if ($_SESSION['attempts'] >= 3) {
     exit; 
 }
 
-if (isset($_POST['user_name']) && isset($_POST['password'])) {
+if (isset($_POST["submit"])) {
     $user_name = $_POST['user_name'];
     $password = $_POST['password'];
-
-    if (isset($users[$user_name]) && $users[$user_name]['password'] === $password) {
-        $_SESSION['attempts'] = 0;
-        header("Location: home1.php"); 
-        exit;
-    } else {
-        $_SESSION['attempts']++;
-        echo "<p>שם המשתמש או הסיסמה שגויים. נסה שוב.</p>";
+    $userFound = false;  
+    
+    foreach ($users as $user) {
+        if ($user['user_name'] === $user_name && $user['password'] === $password) {
+            $_SESSION['attempts'] = 0; 
+            header("Location: home1.php"); 
+            exit;
+        }
     }
+    
+    $_SESSION['attempts']++;
+    echo "<p>שם המשתמש או הסיסמה שגויים. נסה שוב.</p>";
 }
 ?>
 
@@ -101,7 +104,7 @@ if (isset($_POST['user_name']) && isset($_POST['password'])) {
             <input type="text" name="user_name" required /><br /><br />
             סיסמה: </br>
             <input type="password" name="password" required /><br /><br />
-            <input type="submit" value="כניסה" />
+            <input type="submit" name="submit" value="כניסה" />
         </form>
         <p id="p1"> </p>
     </center>
