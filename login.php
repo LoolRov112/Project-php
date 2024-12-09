@@ -3,16 +3,16 @@ include 'usersArray.php';
 session_start();
 
 
-if (!isset($_SESSION['attempts'])) {
-    $_SESSION['attempts'] = 0;
-}
+// if (!isset($_SESSION['attempts'])) {
+//     $_SESSION['attempts'] = 0;
+// }
 
 
-if ($_SESSION['attempts'] >= 3) {
-    echo "<p>הגעת למספר הניסיונות המרבי. אנא נסה מאוחר יותר.</p>";
-    session_unset();
-    exit; 
-}
+// if ($_SESSION['attempts'] >= 2) {
+//     echo "<p>הגעת למספר הניסיונות המרבי. אנא נסה מאוחר יותר.</p>";
+//     session_unset();
+//     exit; 
+// }
 
 if (isset($_POST["submit"])) {
     $user_name = $_POST['user_name'];
@@ -20,15 +20,30 @@ if (isset($_POST["submit"])) {
     $userFound = false;  
     
     foreach ($users as $user) {
-        if ($user['user_name'] === $user_name && $user['password'] === $password) {
-            $_SESSION['attempts'] = 0; 
-            header("Location: home1.php"); 
-            exit;
+        if ($user['user_name'] == $user_name) 
+            {
+                if($user['password'] != $password)
+                {
+                    if(!isset($_SESSION['user_name']))
+                    {
+                        $_SESSION['user_name']=1;
+                    }
+                    else
+                    {
+                    $_SESSION['user_name']+=1;
+                    }
+                if($_SESSION['user_name']>=3)
+                {
+                    echo "<p>הגעת למספר הניסיונות המרבי. אנא נסה מאוחר יותר.</p>"; 
+                }
+                }
+                else
+                    header("Location: home1.php"); 
+            }
+            
         }
-    }
     
-    $_SESSION['attempts']++;
-    echo "<p>שם המשתמש או הסיסמה שגויים. נסה שוב.</p>";
+    
 }
 ?>
 
