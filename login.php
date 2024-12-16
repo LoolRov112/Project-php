@@ -1,5 +1,6 @@
 <?php
 include 'usersArray.php';
+include 'nav.php';
 session_start();
 
 
@@ -27,12 +28,18 @@ if (isset($_POST["submit"])) {
                     echo "<p>הגעת למספר הניסיונות המרבי. אנא נסה מאוחר יותר.</p>"; 
                 }
                 }
-                else
-                    header("Location: home1.php"); 
+                else{
+                    $item_id =$_SESSION['user_name'];
+                    header("Location: home1.php");
+                }
+                    }
+                
+                    }
+                                     
+                                    
             }
             
-        }
-}
+
 
 if(isset($_POST["forgetPass"]))
     header("Location: forgetPass.php");
