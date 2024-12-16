@@ -111,31 +111,34 @@ for ($i = 0; $i < count($avocados); $i++) {
 <div align="center" style="margin-top:2em">
     <form method="post" enctype="multipart/form-data">
         בחר קובץ להעלאה
-        <input type="file" name="file1" id="fileToUpload">
+        <input type="file" name ='test' id="fileToUpload">
         <br>
-            <input type="file" name="file2" id="fileToUpload">
+        <br>
+            <!-- <input type="file" name="file2" id="fileToUpload"> -->
         <br>
         <input type="submit" value="השוואה" name="submit">
     </form>
 </div>
-<?php
+</html>
+<?php   
  
 if(isset($_POST["submit"])){
-    echo $_POST["file1"];
-    $file1= fopen($_POST["file1"], "r");
-    $file2= fopen($_POST["file2"], "r");
-    $flag=0;
-    while(!feof($file1) || !feof($file2)){
-        if(strcasecmp(fgetc($file1) , fgetc($file2))!=0){
-            echo '<p>לא זהים</p>';
-            $flag=1;
-            break;
-        }
-    }
-    if($flag==0)
-        echo '<p>קבצים זהים</p>';
-    fclose($file1);
-    fclose($file2);
+    echo $_POST['test'];
+    // $file1= fopen($_POST['file1'], "r");
+    // $file2= fopen($_POST["file2"], "r");
+    // echo $file1;
+    // $flag=0;
+    // while(!feof($file1) || !feof($file2)){
+    //     if(strcasecmp(fgetc($file1) , fgetc($file2))!=0){
+    //         echo '<p>לא זהים</p>';
+    //         $flag=1;
+    //         break;
+    //     }
+    // }
+    // if($flag==0)
+    //     echo '<p>קבצים זהים</p>';
+    // fclose($file1);
+    // fclose($file2);
 }
 ?>
 </body></html>

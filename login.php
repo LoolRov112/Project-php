@@ -3,17 +3,6 @@ include 'usersArray.php';
 session_start();
 
 
-// if (!isset($_SESSION['attempts'])) {
-//     $_SESSION['attempts'] = 0;
-// }
-
-
-// if ($_SESSION['attempts'] >= 2) {
-//     echo "<p>הגעת למספר הניסיונות המרבי. אנא נסה מאוחר יותר.</p>";
-//     session_unset();
-//     exit; 
-// }
-
 if (isset($_POST["submit"])) {
     $user_name = $_POST['user_name'];
     $password = $_POST['password'];
@@ -27,6 +16,7 @@ if (isset($_POST["submit"])) {
                     if(!isset($_SESSION['user_name']))
                     {
                         $_SESSION['user_name']=1;
+                        echo "<p>סיסמא לא נכונה</p>";
                     }
                     else
                     {
@@ -42,9 +32,10 @@ if (isset($_POST["submit"])) {
             }
             
         }
-    
-    
 }
+
+if(isset($_POST["forgetPass"]))
+    header("Location: forgetPass.php");
 ?>
 
 <html>
@@ -108,6 +99,21 @@ if (isset($_POST["submit"])) {
         input[type="submit"]:hover {
             background-color: darkgreen;
         }
+        input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            background-color: seagreen;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+    input[type="button"]:hover {
+            background-color: darkgreen;
+    }
+
     </style>
 </head>
 <body dir="rtl">
@@ -121,8 +127,9 @@ if (isset($_POST["submit"])) {
             <input type="password" name="password" required /><br /><br />
             <input type="submit" name="submit" value="כניסה" />
         </form>
-        <p id="p1"> </p>
+        <input type="button" value="שכחתי סיסמא" onclick="window.location.href='forgetPass.php'">
     </center>
 </div>
 </body>
 </html>
+<?php?>
