@@ -39,8 +39,8 @@ $avocados = array(
     "imgs/Catelog/etinger.jpg", 
     "imgs/Catelog/hass.jpg"
 );
-
-echo '<html><head>
+?>
+<html><head>
 <style>
 body {
     margin-top: 4em;
@@ -67,7 +67,7 @@ body {
     transition: transform 0.5s;
 }
 .card:hover {
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 .card-img-top {
     width: 100%;
@@ -90,10 +90,10 @@ body {
     font-size: 1.3em;
 }
 </style>
-</head><body dir="rtl">';
+</head><body dir="rtl">;
 
-echo '<div class="cardContainer">';
-
+<div class="cardContainer">
+<?php
 for ($i = 0; $i < count($avocados); $i++) {
     $avocadoName = array_keys($avocadosDesc)[$i];  
     $avocadoDesc = $avocadosDesc[$avocadoName]; 
@@ -106,6 +106,36 @@ for ($i = 0; $i < count($avocados); $i++) {
         </div>
     </div>';
 }
-
-echo '</div></body></html>';
 ?>
+</div>
+<div align="center" style="margin-top:2em">
+    <form method="post" enctype="multipart/form-data">
+        בחר קובץ להעלאה
+        <input type="file" name="file1" id="fileToUpload">
+        <br>
+            <input type="file" name="file2" id="fileToUpload">
+        <br>
+        <input type="submit" value="השוואה" name="submit">
+    </form>
+</div>
+<?php
+ 
+if(isset($_POST["submit"])){
+    echo $_POST["file1"];
+    $file1= fopen($_POST["file1"], "r");
+    $file2= fopen($_POST["file2"], "r");
+    $flag=0;
+    while(!feof($file1) || !feof($file2)){
+        if(strcasecmp(fgetc($file1) , fgetc($file2))!=0){
+            echo '<p>לא זהים</p>';
+            $flag=1;
+            break;
+        }
+    }
+    if($flag==0)
+        echo '<p>קבצים זהים</p>';
+    fclose($file1);
+    fclose($file2);
+}
+?>
+</body></html>
