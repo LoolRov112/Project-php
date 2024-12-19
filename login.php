@@ -133,4 +133,5 @@ if(isset($_POST["forgetPass"]))
 </div>
 </body>
 </html>
+<!-- session_unset(); -->
 <?php?>

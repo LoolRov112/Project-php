@@ -20,7 +20,7 @@ echo '<nav><ul>';
 
 if (isset($_SESSION['first_name']) && isset($_SESSION['last_name'])) {
     echo "<li class='usergreet'>שלום " . $_SESSION['first_name'] . ' ' . $_SESSION['last_name'] . "</li>";
-    echo '<li><a href="login.php">יציאה</a></li>';
+    echo '<li><a href="logout.php">יציאה</a></li>';
 } 
 else if (!isset($_SESSION['first_name']) && !isset($_SESSION['last_name'])) {
     echo '<li><a href="login.php">כניסה</a></li>';
@@ -34,5 +34,4 @@ for ($i = 0; $i < count($navOptions); $i++) {
 
 
 echo '</ul></nav></div>';
-session_unset();
 ?>
