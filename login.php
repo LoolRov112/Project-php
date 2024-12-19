@@ -1,43 +1,37 @@
 <?php
 include 'usersArray.php';
 include 'nav.php';
-session_start();
+session_unset();
 
 
 if (isset($_POST["submit"])) {
     $user_name = $_POST['user_name'];
     $password = $_POST['password'];
-    $userFound = false;  
-    
+    $userFound = false;
+
     foreach ($users as $user) {
-        if ($user['user_name'] == $user_name) 
-            {
-                if($user['password'] != $password)
-                {
-                    if(!isset($_SESSION['user_name']))
-                    {
-                        $_SESSION['user_name']=1;
-                        echo "<p>סיסמא לא נכונה</p>";
-                    }
-                    else
-                    {
-                    $_SESSION['user_name']+=1;
-                    }
-                if($_SESSION['user_name']>=3)
-                {
+        if ($user['user_name'] == $user_name) {
+            if($user['password'] != $password) {
+                if(!isset($_SESSION['user_name'])) {
+                    $_SESSION['user_name'] = 1;
+                    echo "<p>סיסמא לא נכונה</p>";
+                } else {
+                    $_SESSION['user_name'] += 1;
+                }
+
+                if($_SESSION['user_name'] >= 3) {
                     echo "<p>הגעת למספר הניסיונות המרבי. אנא נסה מאוחר יותר.</p>"; 
                 }
-                }
-                else{
-                    $item_id =$_SESSION['user_name'];
-                    header("Location: home1.php");
-                }
-                    }
+            } else {
+                $_SESSION['first_name'] = $user['first_name'];
+                $_SESSION['last_name'] = $user['last_name'];
                 
-                    }
-                                     
-                                    
+                header("Location: home1.php");
             }
+        }
+    }
+}
+
             
 
 
