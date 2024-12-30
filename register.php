@@ -1,12 +1,43 @@
 <?php
-include 'usersArray.php';
 include 'nav.php';
-echo '<html>
+include 'db_connection.php';
+$con = OpenCon();
+$user = mysqli_query($con,"SELECT * FROM users");
+
+
+if (isset($_POST["submit"])) {
+    $user_name = $_POST['user_name'];
+    $fName = $_POST['first_name'];
+    $lName = $_POST['last_name'];
+    $email= $_POST['email'];
+    $phone= $_POST['phone'];
+    $address = $_POST['address'];
+    $password = $_POST ['password'];
+
+    while($row = mysqli_fetch_array($user))
+    {
+        if($row['userName']==$user_name)
+            alert("המשתמש כבר קיים כפרה");
+        else if($row['email']==$email){
+            alert("האימייל כבר קיים כפרה");
+        }
+        else if($row['phone']==$phone){
+            alert("הטלפון כבר קיים כפרה");
+        }
+        else{
+            $insert_user = "INSERT INTO users values('".$user_name."','". $fName."','".$lName."','".$password."','".$email."','".$phone."','".$address."',1)";
+             mysqli_query($con, $insert_user);
+             header("Location: login.php");
+        }
+    }
+}
+?>
+<html>
 <head>
 <title>הרשמה לאתר</title>
 <style>
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'IBM Plex Sans Hebrew';
     background-image: url("imgs/bgAv.jpg");
     background-size: cover;
     margin-top: 5em;        
@@ -69,7 +100,7 @@ input[type="submit"]:hover {
 <div class="formContainer">
 <center>
 <h1>הרשמה לאתר משק 95</h1>
-<form action="checkSignUp.php" method="post" name="register">
+<form  method="post" name="register">
 שם משתמש: </br>
 <input type="text" name="user_name" required /><br /><br />
     שם פרטי: </br>
@@ -93,9 +124,5 @@ input[type="submit"]:hover {
 </body>
 </html>';
 
-// echo "<pre>";
-// print_r($users);
-// echo "</pre>";
 
-?>
 

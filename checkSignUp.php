@@ -1,5 +1,7 @@
 <?php
-include 'usersArray.php';
+include 'db_connection.php';
+$con = OpenCon();
+$user = mysqli_query($con,"SELECT * FROM users");
 if(isset($_POST["submit"]))
 {
 $newUser = array();

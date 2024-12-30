@@ -18,11 +18,11 @@ echo '<link rel="stylesheet" href="styles.css">
 
 echo '<nav><ul>';
 
-if (isset($_SESSION['first_name']) && isset($_SESSION['last_name'])) {
-    echo "<li class='usergreet'>שלום " . $_SESSION['first_name'] . ' ' . $_SESSION['last_name'] . "</li>";
+if (isset($_SESSION['fName']) && isset($_SESSION['lName'])) {
+    echo "<li class='usergreet'>שלום " . $_SESSION['fName'] . ' ' . $_SESSION['lName'] . "</li>";
     echo '<li><a href="logout.php">יציאה</a></li>';
 } 
-else if (!isset($_SESSION['first_name']) && !isset($_SESSION['last_name'])) {
+else if (!isset($_SESSION['fName']) && !isset($_SESSION['lName'])) {
     echo '<li><a href="login.php">כניסה</a></li>';
     echo '<li><a href="register.php">הרשמה</a></li>';
 }
@@ -31,7 +31,6 @@ for ($i = 0; $i < count($navOptions); $i++) {
     $currentLink = $links[$currentOption];
     echo '<li><a href="' . $currentLink . '">' . $currentOption . '</a></li>';
 }
-
 
 echo '</ul></nav></div>';
 ?>

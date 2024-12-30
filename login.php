@@ -1,50 +1,46 @@
 <?php
-include 'usersArray.php';
 include 'nav.php';
-session_unset();
-
+include 'db_connection.php';
+$con = OpenCon();
+$user = mysqli_query($con,"SELECT * FROM users");
 
 if (isset($_POST["submit"])) {
     $user_name = $_POST['user_name'];
     $password = $_POST['password'];
     $userFound = false;
-
-    foreach ($users as $user) {
-        if ($user['user_name'] == $user_name) {
-            if($user['password'] != $password) {
-                if(!isset($_SESSION['user_name'])) {
-                    $_SESSION['user_name'] = 1;
+    while($row = mysqli_fetch_array($user))
+    {
+        if ($row['userName'] == $user_name) {
+            if($row['password'] != $password) {
+                if(!isset($_SESSION['userName'])) {
+                    $update_query = "UPDATE users SET attempts = 1 WHERE userName = '$user_name'";
+                    mysqli_query($con, $update_query);
                     echo "<p>סיסמא לא נכונה</p>";
                 } else {
-                    $_SESSION['user_name'] += 1;
+                    $update_query= mysqli_query($con,"UPDATE 'users' SET 'attempts' = attempts + 1 where " .$row['userName']. "= ".$user_name);
                 }
 
-                if($_SESSION['user_name'] >= 3) {
+                if($row['attempts'] >= 3) {
                     echo "<p>הגעת למספר הניסיונות המרבי. אנא נסה מאוחר יותר.</p>"; 
                 }
             } else {
-                $_SESSION['first_name'] = $user['first_name'];
-                $_SESSION['last_name'] = $user['last_name'];
-                
-                header("Location: home1.php");
+                $_SESSION['fName'] = $row['fName'];
+                $_SESSION['lName'] = $row['lName'];
+                $update_query = mysqli_query($con, "UPDATE users SET attempts = 0 WHERE userName = '$user_name'");
+                 header("Location: home1.php");
             }
         }
     }
-}
-
-            
-
+    }
 
 if(isset($_POST["forgetPass"]))
     header("Location: forgetPass.php");
 ?>
-
 <html>
 <head>
     <title>כניסה לאתר</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             background-image: url("imgs/bgAv.jpg");
             background-size: cover;
             margin-top: 5em;
@@ -133,5 +129,4 @@ if(isset($_POST["forgetPass"]))
 </div>
 </body>
 </html>
-<!-- session_unset(); -->
 <?php?>
