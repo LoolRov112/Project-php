@@ -1,5 +1,7 @@
 <?php 
-include 'usersArray.php';  // מוודא שמערך המשתמשים נכנס
+include 'db_connection.php';
+$con = OpenCon();
+$user = mysqli_query($con,"SELECT * FROM users");
 
 function generateNewPassword($length = 6) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -13,23 +15,23 @@ function generateNewPassword($length = 6) {
 
 if (isset($_POST["forgotPass"])) {
     $user_name = $_POST['user_name'];
+    $newPass = generateNewPassword();
     $userFound = false;
 
-    // עובר על המערך ומחפש את שם המשתמש
-    foreach ($users as &$user) {
-        if ($user['user_name'] == $user_name) {
-            $userFound = true;
-            $newPassword = generateNewPassword();  
-            $user['password'] = $newPassword;  
-            echo "<p>הסיסמה החדשה שלך היא: <strong> $newPassword </strong></p>";
-            break;
-        }
+    while($row = mysqli_fetch_array($user))
+    {
+        if ($row['userName'] == $user_name) {
+                    $update_query = "UPDATE users SET password = '$newPass' WHERE userName = '".$user_name."'";
+                    mysqli_query($con, $update_query);
+                    $update_query= mysqli_query($con,"UPDATE users SET attempts = 0 where '" .$row['userName']. "'= '".$user_name."'");
+                    echo "<p>הסיסמא החדשה שלך היא: " . $newPass . "</p>";
+                    $userFound = true;
+                    break;        
+                }            
     }
-
-    // אם לא נמצא המשתמש
-    if (!$userFound) {
-        echo "<p>שם המשתמש לא נמצא במערכת.</p>";
-    }
+        if (!$userFound)  {
+            echo "<p>שם המשתמש לא נמצא במערכת.</p>";
+        }   
 }
 ?>
 
@@ -106,7 +108,7 @@ if (isset($_POST["forgotPass"])) {
             <h1>שחזור סיסמה</h1>
             <input type="text" name="user_name" placeholder="הכנס שם משתמש" required>
             <input type="submit" value="החלף סיסמא" name="forgotPass">
-            <input type="button" value="חזור לדף הראשי" onclick="window.location.href='home1.php'">
+            <input type="button" value="חזור לדף הכניסה" onclick="window.location.href='login.php'">
         </form>
     </div>
 </body>

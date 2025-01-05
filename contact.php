@@ -1,6 +1,23 @@
 <?php
 include 'nav.php';
-echo '
+include 'db_connection.php';
+$con = OpenCon();
+
+if(isset($_POST["submit"])){
+    $fName= $_POST['fName'];
+    $lName= $_POST['lName'];
+    $email= $_POST['email'];
+    $phone= $_POST['phone'];
+    $msg= $_POST['message'];
+
+    $insert_contact = "INSERT INTO contact values(null, '". $fName."','".$lName."','".$phone."','".$email."','".$msg."')";
+    mysqli_query($con, $insert_contact);
+    echo "<script>
+            alert('תגובתך נרשמה בהצלחה');
+            window.location.href = 'home1.php';
+        </script>";
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,8 +90,11 @@ echo '
         <div class="contact-form">
             <h2>צור קשר</h2>
             <form action="#" method="POST">
-                <label for="name">שם מלא:</label>
-                <input type="text" id="name" name="name" required>
+                <label for="fName">שם פרטי:</label>
+                <input type="text" id="name" name="fName" required>
+
+                <label for="lName">שם משפחה:</label>
+                <input type="text" id="name" name="lName" required>
 
                 <label for="email">דוא"ל:</label>
                 <input type="email" id="email" name="email" required>
@@ -83,12 +103,12 @@ echo '
                 <input type="tel" id="phone" name="phone" required>
 
                 <label for="message">הודעה:</label>
-                <textarea id="message" name="message" rows="5שלך" required></textarea>
-                <button type="submit">שלח</button>
+                <textarea id="message" name="message"  required></textarea>
+                <button type="submit" name="submit">שלח</button>
             </form>
         </div>
     </div>
 </body>
 </html>
 ';
-?>
+
