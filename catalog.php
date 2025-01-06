@@ -2,6 +2,17 @@
 include 'nav.php';
 include 'db_connection.php';
 $con = OpenCon();
+
+if(isset($_POST["submit"])){
+    $userName = $_SESSION['userName'];
+    $productID = $_POST['id'];
+    $quantity = $_POST['quantity']; 
+    if ($quantity > 0){
+        $insert_order = "INSERT INTO cart values('".$userName."',$productID,$quantity)";
+        mysqli_query($con, $insert_order);
+    }
+}
+
 ?>
 <html>
 <head>
@@ -23,7 +34,7 @@ body {
     border: 1px solid #ccc; 
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+    background-color: beige;
     display: flex;
     flex-direction: column;
     transition: transform 0.5s;
@@ -36,7 +47,7 @@ body {
 }
 .card-body {
     padding: 15px;
-    background-color: beige;
+    
 }
 .card-title {
     font-size: 1.5em;
@@ -52,8 +63,8 @@ body {
 <script>
 function validateQuantity(stock, id) {
     const quantity = document.getElementById('quantity-' + id).value;
-    if (quantity > stock) {
-        alert('כמות המבוקשת גדולה מהמלאי הקיים!');
+    if (quantity > stock || quantity <= 0) {
+        alert('הכמות אינה תקינה');
         return false;
     }
     alert('הכמות הוזנה בהצלחה!');
@@ -73,6 +84,11 @@ while($row = mysqli_fetch_array($product)){
             <p class="card-text">' . $row["description"] . '</p>
             <p class="card-text">מחיר: ₪' . $row["price"] . '</p>
             <p class="card-text">כמות במלאי: ' . $row["quantity"] . '</p>
+            <form method="POST">
+                <input type="hidden" name="id" value="' . $row["id"] . '">
+                <input id="quantity-' . $row["id"] . '" class="quantity-input" name="quantity" type="number" min="1" max="' . $row["quantity"] . '" placeholder="0">
+                <button name= "submit" onclick="return validateQuantity(' . $row["quantity"] . ', ' . $row["id"] . ')">הוסף לסל</button>
+            </form>
 
         </div>
     </div>';
@@ -80,17 +96,17 @@ while($row = mysqli_fetch_array($product)){
 ?>
 </div>
 
-<div align="center" style="margin-top:2em">
+<!-- <div align="center" style="margin-top:2em">
     <form method="post" enctype="multipart/form-data">
         בחר קובץ להעלאה
         <input type="file" name ='test' id="fileToUpload">
         <br>
-        <br>
+        <br> -->
             <!-- <input type="file" name="file2" id="fileToUpload"> -->
-        <br>
-        <input type="submit" value="השוואה" name="submit">
+        <!-- <br>
+        <input type="submit" name= "submit" value="השוואה" name="submit">
     </form>
-</div>
+</div> -->
 
 <?php   
  

@@ -6,7 +6,7 @@ $links = array(
     "צור קשר" => "contact.php",
     "קטלוג" => "catalog.php",
     "כניסה" => "login.php",
-    "הרשמה" => "register.php"
+    "הרשמה" => "register.php",
 );
 $navOptions = array("דף הבית", "צור קשר", "קטלוג");
 
@@ -21,6 +21,7 @@ echo '<nav><ul>';
 if (isset($_SESSION['fName']) && isset($_SESSION['lName'])) {
     echo "<li class='usergreet'>שלום " . $_SESSION['fName'] . ' ' . $_SESSION['lName'] . "</li>";
     echo '<li><a href="logout.php">יציאה</a></li>';
+    echo '<li><a href="basket.php">סל קניות</a></li>';
 } 
 else if (!isset($_SESSION['fName']) && !isset($_SESSION['lName'])) {
     echo '<li><a href="login.php">כניסה</a></li>';
