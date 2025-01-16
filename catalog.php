@@ -3,6 +3,7 @@ include 'nav.php';
 include 'db_connection.php';
 $con = OpenCon();
 
+
 if(isset($_POST["submit"])){
     $userName = $_SESSION['userName'];
     $productID = $_POST['id'];
@@ -11,6 +12,12 @@ if(isset($_POST["submit"])){
         $insert_order = "INSERT INTO cart values('".$userName."',$productID,$quantity)";
         mysqli_query($con, $insert_order);
     }
+}
+if(isset($_POST['update'])){
+    $quantity= $_POST['changeQuantity'];
+    $productID = $_POST['id'];
+    $update_quantity = "UPDATE product set quantity = $quantity where id = $productID";
+    mysqli_query($con, $update_quantity);
 }
 
 ?>
@@ -73,6 +80,13 @@ function validateQuantity(stock, id) {
 </script>
 </head>
 <body dir="rtl">
+    <?php
+if ($_SESSION['isManager'] == 1) {
+    echo '<div>
+        <button onclick="window.location.href=\'newProduct.php\'">הוסף מוצר</button>
+    </div>';
+}
+?>
 <div class="cardContainer">
 <?php
 $product = mysqli_query($con,"SELECT * FROM product");
@@ -83,7 +97,16 @@ while($row = mysqli_fetch_array($product)){
             <h5 class="card-title">' . $row["name"] . '</h5>
             <p class="card-text">' . $row["description"] . '</p>
             <p class="card-text">מחיר: ₪' . $row["price"] . '</p>
-            <p class="card-text">כמות במלאי: ' . $row["quantity"] . '</p>
+            <div>
+            <p class="card-text">כמות במלאי: ' . $row["quantity"] . '</p>';
+            if($_SESSION['isManager']==1){
+                echo '<form method="POST">
+                    <input type="hidden" name="id" value="' . $row["id"] . '">
+                    <input type="number" id="changeQuantity" name="changeQuantity">
+                    <button name="update"> עדכן כמות</button>
+                    </form>';
+            };
+            echo '</div>
             <form method="POST">
                 <input type="hidden" name="id" value="' . $row["id"] . '">
                 <input id="quantity-' . $row["id"] . '" class="quantity-input" name="quantity" type="number" min="1" max="' . $row["quantity"] . '" placeholder="0">

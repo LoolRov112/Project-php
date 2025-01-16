@@ -10,7 +10,7 @@ if(isset($_POST["submit"])){
     $phone= $_POST['phone'];
     $msg= $_POST['message'];
 
-    $insert_contact = "INSERT INTO contact values(null, '". $fName."','".$lName."','".$phone."','".$email."','".$msg."')";
+    $insert_contact = "INSERT INTO contact values(null, '". $fName."','".$lName."','".$phone."','".$email."','".$msg."',0)";
     mysqli_query($con, $insert_contact);
     echo "<script>
             alert('תגובתך נרשמה בהצלחה');

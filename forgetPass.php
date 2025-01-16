@@ -13,7 +13,8 @@ function generateNewPassword($length = 6) {
     return $newPassword;
 }
 
-if (isset($_POST["forgotPass"])) {
+if (isset($_POST["forgotPass"])) 
+{
     $user_name = $_POST['user_name'];
     $newPass = generateNewPassword();
     $userFound = false;
@@ -26,6 +27,10 @@ if (isset($_POST["forgotPass"])) {
                     $update_query= mysqli_query($con,"UPDATE users SET attempts = 0 where '" .$row['userName']. "'= '".$user_name."'");
                     echo "<p>הסיסמא החדשה שלך היא: " . $newPass . "</p>";
                     $userFound = true;
+                    $_SESSION['userName'] = $row['userName'];
+                    $_SESSION['email'] = $row['email'];
+                    $_SESSION['password'] = $newPass;
+                    header("Location: sendMail.php");
                     break;        
                 }            
     }
@@ -33,6 +38,7 @@ if (isset($_POST["forgotPass"])) {
             echo "<p>שם המשתמש לא נמצא במערכת.</p>";
         }   
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -107,7 +113,7 @@ if (isset($_POST["forgotPass"])) {
         <form action="" method="post">
             <h1>שחזור סיסמה</h1>
             <input type="text" name="user_name" placeholder="הכנס שם משתמש" required>
-            <input type="submit" value="החלף סיסמא" name="forgotPass">
+            <input type="submit" value="החלף סיסמה" name="forgotPass">
             <input type="button" value="חזור לדף הכניסה" onclick="window.location.href='login.php'">
         </form>
     </div>

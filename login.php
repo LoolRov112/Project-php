@@ -27,6 +27,7 @@ if (isset($_POST["submit"])) {
                 $_SESSION['fName'] = $row['fName'];
                 $_SESSION['lName'] = $row['lName'];
                 $_SESSION['userName'] = $row['userName'];
+                $_SESSION['isManager'] = $row['manager'];
                 $update_query = mysqli_query($con, "UPDATE users SET attempts = 0 WHERE userName = '$user_name'");
                  header("Location: home1.php");
             }

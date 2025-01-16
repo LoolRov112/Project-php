@@ -25,7 +25,7 @@ if (isset($_POST["submit"])) {
             alert("הטלפון כבר קיים כפרה");
         }
         else{
-            $insert_user = "INSERT INTO users values('".$user_name."','". $fName."','".$lName."','".$password."','".$email."','".$phone."','".$address."',1)";
+            $insert_user = "INSERT INTO users values('".$user_name."','". $fName."','".$lName."','".$password."','".$email."','".$phone."','".$address."',1,0)";
              mysqli_query($con, $insert_user);
              header("Location: login.php");
         }
