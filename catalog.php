@@ -81,10 +81,12 @@ function validateQuantity(stock, id) {
 </head>
 <body dir="rtl">
     <?php
-if ($_SESSION['isManager'] == 1) {
-    echo '<div>
-        <button onclick="window.location.href=\'newProduct.php\'">הוסף מוצר</button>
-    </div>';
+    if (isset($_SESSION['fName']) && isset($_SESSION['lName'])){
+    if ($_SESSION['isManager'] == 1) {
+        echo '<div>
+            <button onclick="window.location.href=\'newProduct.php\'">הוסף מוצר</button>
+        </div>';
+}
 }
 ?>
 <div class="cardContainer">
@@ -99,6 +101,7 @@ while($row = mysqli_fetch_array($product)){
             <p class="card-text">מחיר: ₪' . $row["price"] . '</p>
             <div>
             <p class="card-text">כמות במלאי: ' . $row["quantity"] . '</p>';
+            if (isset($_SESSION['fName']) && isset($_SESSION['lName'])){
             if($_SESSION['isManager']==1){
                 echo '<form method="POST">
                     <input type="hidden" name="id" value="' . $row["id"] . '">
@@ -106,6 +109,7 @@ while($row = mysqli_fetch_array($product)){
                     <button name="update"> עדכן כמות</button>
                     </form>';
             };
+        };
             echo '</div>
             <form method="POST">
                 <input type="hidden" name="id" value="' . $row["id"] . '">
