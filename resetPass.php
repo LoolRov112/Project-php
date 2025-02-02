@@ -1,49 +1,51 @@
 <?php 
 include 'db_connection.php';
-include 'sendMail.php';
-session_start(); 
+session_start();  
 $con = OpenCon();
 $user = mysqli_query($con,"SELECT * FROM users");
+if (isset($_POST['submit'])){
+    $newPass = $_POST['newPass'];
+    $repeatPass = $_POST['repeatPass'];
+    $userName = $_SESSION['userName'];
+    $isLongEnough = strlen($newPass) >= 8; 
+    $hasUpperCase = false; 
+    $hasDigit = false; 
 
-function generateNewPassword($length = 8) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charactersLength = strlen($characters);
-    $newPassword = '';
-    for ($i = 0; $i < $length; $i++) {
-        $newPassword .= $characters[rand(0, $charactersLength - 1)];
-    };
-    return $newPassword;
-}
-
-if (isset($_POST["forgotPass"])) 
-{
-    $user_name = $_POST['user_name'];
-    $newPass = generateNewPassword();
-    $userFound = false;
-
-    while($row = mysqli_fetch_array($user))
-    {
-        if ($row['userName'] == $user_name) {
-                    $update_query = "UPDATE users SET password = '$newPass' WHERE userName = '".$user_name."'";
-                    mysqli_query($con, $update_query);
-                    $update_reset = "UPDATE users SET reset = 1 WHERE userName = '".$user_name."'";
-                    mysqli_query($con, $update_reset);
-                    $update_query= mysqli_query($con,"UPDATE users SET attempts = 0 where '" .$row['userName']. "'= '".$user_name."'");
-                    echo "<p>הסיסמא החדשה שלך היא: " . $newPass . "</p>";
-                    $userFound = true;
-                    $to = $row['email'];
-                    $subject = "שחזור סיסמה";
-                    $message = "<b>סיסמתך החדשה:</b><br><h1>$newPass</h1><br><a href='login.php'>לחץ כאן להתחברות</a>";
-                    $from = "mayan.yehuda@gmail.com";
-                    $_SESSION['userName'] = $row['userName'];
-                    sendMail($to, $subject, $message, $from);
-                    break;        
-                }            
+    for ($i = 0; $i < strlen($newPass); $i++) {
+        if (ctype_upper($newPass[$i])) { 
+            $hasUpperCase = true;
+        }
+        if (ctype_digit($newPass[$i])) { 
+            $hasDigit = true;
+        }
     }
-        if (!$userFound)  {
-            echo "<p>שם המשתמש לא נמצא במערכת.</p>";
-        }   
+
+    if (!$isLongEnough) {
+        echo "<script>alert('הסיסמה חייבת להיות באורך של 8 תווים לפחות.');</script>";
+    } elseif (!$hasUpperCase) {
+        echo "<script>alert('הסיסמה חייבת להכיל לפחות אות גדולה אחת.');</script>";
+    } elseif (!$hasDigit) {
+        echo "<script>alert('הסיסמה חייבת להכיל לפחות ספרה אחת.');</script>";
+    } elseif ($newPass !== $repeatPass) {
+        echo "<script>alert('הסיסמאות אינן תואמות כפרה.');</script>";
+    } else {
+        while($row = mysqli_fetch_array($user)){
+            if($row['userName'] == $userName){
+                $update_query = "UPDATE users SET password = '$newPass' WHERE userName = '".$userName."'";
+                mysqli_query($con, $update_query);
+                $update_reset = "UPDATE users SET reset = 0 WHERE userName = '".$userName."'";
+                mysqli_query($con, $update_reset);
+                break;
+                }
+            }
+            echo "<script>
+            alert('סיסמתך שונתה בהצלחה');</script>";
+            header("Refresh:0.5 logout.php");
+            exit();
+    }
 }
+
+
 
 ?>
 
@@ -116,10 +118,11 @@ if (isset($_POST["forgotPass"]))
 </head>
 <body dir="rtl">
     <div class="formContainer">
-        <form action="" method="post">
-            <h1>שחזור סיסמה</h1>
-            <input type="text" name="user_name" placeholder="הכנס שם משתמש" required>
-            <input type="submit" value="החלף סיסמה" name="forgotPass">
+        <form action="" method="post" name = "newPassword">
+            <h1>עדכון סיסמה</h1>
+            <input type="text" name="newPass" placeholder="הכנס סיסמה חדשה " required>
+            <input type="text" name="repeatPass" placeholder="חזור על סיסמה חדשה " required>
+            <input type="submit" value="החלף סיסמה" name="submit">
             <input type="button" value="חזור לדף הכניסה" onclick="window.location.href='login.php'">
         </form>
     </div>

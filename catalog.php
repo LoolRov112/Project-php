@@ -2,15 +2,43 @@
 include 'nav.php';
 include 'db_connection.php';
 $con = OpenCon();
+$cart = mysqli_query($con,"SELECT * FROM cart");
 
-
-if(isset($_POST["submit"])){
+if (isset($_POST["submit"])) {
     $userName = $_SESSION['userName'];
     $productID = $_POST['id'];
-    $quantity = $_POST['quantity']; 
-    if ($quantity > 0){
-        $insert_order = "INSERT INTO cart values('".$userName."',$productID,$quantity)";
-        mysqli_query($con, $insert_order);
+    $quantity = $_POST['quantity'];
+    $found = false;
+    if ($quantity > 0) {
+        while ($row = mysqli_fetch_array($cart)) {
+            if ($row['userName'] == $userName && $row['productID'] == $productID) {
+                $productQuery = "SELECT quantity FROM product WHERE id = $productID";
+                $productResult = mysqli_query($con, $productQuery);
+                $productRow = mysqli_fetch_assoc($productResult);
+                if ($productRow) {
+                    $stockQuantity = $productRow['quantity'];
+                    $newQuantity = $row['chosenQuantity'] + $quantity;
+                    if ($newQuantity > $stockQuantity) {
+                        echo "<script>alert('לא ניתן להוסיף כמות זו לסל. חורגת מהמלאי הקיים.');</script>";
+                        $found = true;
+                        break;
+                    }                    
+                    $update_cart = "UPDATE cart SET chosenQuantity = $newQuantity WHERE userName = '$userName' AND productID = $productID";
+                    mysqli_query($con, $update_cart);
+                    echo "<script>alert('המוצר עודכן בהצלחה בסל!');</script>";
+                    $found = true;
+                    break;
+                }
+            }
+        }
+        // אם המוצר אינו בסל, מבוצעת הוספה
+        if (!$found) {
+            $insert_order = "INSERT INTO cart VALUES('$userName', $productID, $quantity)";
+            mysqli_query($con, $insert_order);
+            echo "<script>alert('המוצר נוסף בהצלחה לסל!');</script>";
+        }
+    } else {
+        echo "<script>alert('יש להזין כמות תקינה.');</script>";
     }
 }
 if(isset($_POST['update'])){
@@ -18,6 +46,9 @@ if(isset($_POST['update'])){
     $productID = $_POST['id'];
     $update_quantity = "UPDATE product set quantity = $quantity where id = $productID";
     mysqli_query($con, $update_quantity);
+    echo "<script>
+            alert('הכמות עודכנה בהצלחה');</script>";
+            header("Refresh:0.5 catalog.php");
 }
 
 ?>
@@ -74,7 +105,6 @@ function validateQuantity(stock, id) {
         alert('הכמות אינה תקינה');
         return false;
     }
-    alert('הכמות הוזנה בהצלחה!');
     return true;
 }
 </script>
@@ -94,7 +124,7 @@ function validateQuantity(stock, id) {
 $product = mysqli_query($con,"SELECT * FROM product");
 while($row = mysqli_fetch_array($product)){
     echo '<div class="card">
-        <img class="card-img-top" src="' . $row["image"] . '" alt="' . $row["name"] . '">
+        <img class="card-img-top" src="imgs/' . $row["image"] . '" alt="' . $row["name"] . '">
         <div class="card-body">
             <h5 class="card-title">' . $row["name"] . '</h5>
             <p class="card-text">' . $row["description"] . '</p>
@@ -110,50 +140,21 @@ while($row = mysqli_fetch_array($product)){
                     </form>';
             };
         };
-            echo '</div>
-            <form method="POST">
+            
+            echo '</div>';
+            if (isset($_SESSION['fName']) && isset($_SESSION['lName'])){
+            if($_SESSION['isManager']==0){
+            echo '<form method="POST">
                 <input type="hidden" name="id" value="' . $row["id"] . '">
                 <input id="quantity-' . $row["id"] . '" class="quantity-input" name="quantity" type="number" min="1" max="' . $row["quantity"] . '" placeholder="0">
                 <button name= "submit" onclick="return validateQuantity(' . $row["quantity"] . ', ' . $row["id"] . ')">הוסף לסל</button>
-            </form>
-
-        </div>
+            </form>';
+            };
+        };
+        echo '</div>
     </div>';
 }
 ?>
 </div>
 
-<!-- <div align="center" style="margin-top:2em">
-    <form method="post" enctype="multipart/form-data">
-        בחר קובץ להעלאה
-        <input type="file" name ='test' id="fileToUpload">
-        <br>
-        <br> -->
-            <!-- <input type="file" name="file2" id="fileToUpload"> -->
-        <!-- <br>
-        <input type="submit" name= "submit" value="השוואה" name="submit">
-    </form>
-</div> -->
-
-<?php   
- 
-if(isset($_POST["submit"])){
-    echo $_POST['test'];
-    // $file1= fopen($_POST['file1'], "r");
-    // $file2= fopen($_POST["file2"], "r");
-    // echo $file1;
-    // $flag=0;
-    // while(!feof($file1) || !feof($file2)){
-    //     if(strcasecmp(fgetc($file1) , fgetc($file2))!=0){
-    //         echo '<p>לא זהים</p>';
-    //         $flag=1;
-    //         break;
-    //     }
-    // }
-    // if($flag==0)
-    //     echo '<p>קבצים זהים</p>';
-    // fclose($file1);
-    // fclose($file2);
-}
-?>
 </body></html>

@@ -1,6 +1,6 @@
 <?php
 include 'nav.php';
-$imagesArr=array("imgs/avocadoMaayan.jpg","imgs/AvocadoTree.jpeg", "imgs/Avocado2.jpg");
+$imagesArr=array("imgs/israv.jpg","imgs/AvocadoTree.jpeg", "imgs/Avocado2.jpg");
 echo '<html dir="rtl"><head>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,7 +35,7 @@ body{
 </head><body>';
 echo '<div class="containerHome">
         <div id="prev" onclick="prev()">◀</div>
-            <div><img src="imgs/avocadoMaayan.jpg"></div>
+            <div><img src="imgs/israv.jpg"></div>
         <div id="next" onclick="next()">▶</div>';
 
 echo '</div> <script src="script.js"></script>';

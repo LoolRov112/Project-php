@@ -28,8 +28,14 @@ if (isset($_POST["submit"])) {
                 $_SESSION['lName'] = $row['lName'];
                 $_SESSION['userName'] = $row['userName'];
                 $_SESSION['isManager'] = $row['manager'];
+                $_SESSION['reset'] = $row['reset'];
                 $update_query = mysqli_query($con, "UPDATE users SET attempts = 0 WHERE userName = '$user_name'");
-                 header("Location: home1.php");
+                $update_query = mysqli_query($con, "UPDATE users SET lastLog = NOW() WHERE userName = '$user_name'");
+                if ($_SESSION['reset'] == 1){
+                    header("Location: resetPass.php");
+                }
+                else
+                    header("Location: home1.php");
             }
         }
     }

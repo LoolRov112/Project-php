@@ -1,6 +1,7 @@
 <?php
 include 'nav.php';
 include 'db_connection.php';
+include 'sendMail.php';
 $con = OpenCon();
 $msg = mysqli_query($con, "SELECT * FROM contact");
 
@@ -10,13 +11,39 @@ if (isset($_POST["changeStatus"])) {
     mysqli_query($con, $updateQuery);
 }
 
+// if (isset($_POST["submitReply"])) {
+//     $id = (int)$_POST['reply_id']; 
+//     $reply = mysqli_real_escape_string($con, $_POST['reply_text']);
+    
+//     $insertQuery = "INSERT INTO response VALUES ($id, '$reply')";
+//     if (mysqli_query($con, $insertQuery)) {
+//         echo "<script>alert('התגובה נשמרה בהצלחה!');</script>";
+//     } else {
+//         echo "<script>alert('שגיאה בשמירת התגובה: " . mysqli_error($con) . "');</script>";
+//     }
+// }
 if (isset($_POST["submitReply"])) {
     $id = (int)$_POST['reply_id']; 
     $reply = mysqli_real_escape_string($con, $_POST['reply_text']);
     
     $insertQuery = "INSERT INTO response VALUES ($id, '$reply')";
     if (mysqli_query($con, $insertQuery)) {
-        echo "<script>alert('התגובה נשמרה בהצלחה!');</script>";
+        // שליפת פרטי המשתמש לשליחת דוא"ל
+        $userQuery = "SELECT email FROM contact WHERE id = $id";
+        $result = mysqli_query($con, $userQuery);
+        if ($result && mysqli_num_rows($result) > 0) {
+            $user = mysqli_fetch_assoc($result);
+            $email = $user['email'];
+            
+            // שליחת התגובה במייל
+            $from = "mayan.yehuda@gmail.com";
+            $subject = "תגובה לפנייתך";
+            $body = "שלום,\n\nקיבלנו את פנייתך, והנה תגובתנו:\n\n$reply\n\nבברכה,\nהצוות שלנו";
+            sendMail($email, $subject, $body, $from);
+            
+        } else {
+            echo "<script>alert('שגיאה בשליפת הדוא\"ל של המשתמש.');</script>";
+        }
     } else {
         echo "<script>alert('שגיאה בשמירת התגובה: " . mysqli_error($con) . "');</script>";
     }
@@ -34,7 +61,7 @@ if (isset($_POST["submitReply"])) {
         thead { background-color: #333333; }
         th, td { padding: 1rem; border: 1px solid #444444; }
         th { color: #ffdd57; }
-        tr:nth-child(even) { background-color: #2a2a2a; }
+        tr:nth-child(even) { background-color: #2a2a2a; color: white; }
         tr:hover { background-color: #444444; }
         .button-container { display: flex; justify-content: center; gap: 10px; }
         .btn { padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; }

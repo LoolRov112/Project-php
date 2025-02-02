@@ -2,6 +2,7 @@
 include 'nav.php';
 include 'db_connection.php';
 $con = OpenCon();
+$userName = $_SESSION['userName'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,28 +50,26 @@ $con = OpenCon();
     </style>
 </head>
 <body>
-    <div class="table-container">
-        <h1 style="text-align: center;">רשימת הזמנות</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>מספר הזמנה</th>
-                    <th>שם משתמש</th>
-                    <th>תאריך הזמנה</th>
-                    <th>סכום כולל</th>
-                    <th>מוצרים</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                // שאילתת SQL להצגת כל ההזמנות
-                $orders = mysqli_query($con, "SELECT * FROM `order`");
+<div class="table-container">
+    <h1 style="text-align: center;">רשימת הזמנות</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>מספר הזמנה</th>
+                <th>תאריך הזמנה</th>
+                <th>סכום כולל</th>
+                <th>מוצרים</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            // שאילתת SQL להצגת ההזמנות של המשתמש המחובר
+            $orders = mysqli_query($con, "SELECT * FROM `order` WHERE userName = '$userName'");
+
+            if (mysqli_num_rows($orders) > 0) {
                 while ($row = mysqli_fetch_array($orders)) {
-                    // שליפת נתוני ההזמנה
                     $orderId = $row['id'];
-                    $userName = $row['userName'];
                     $orderDate = $row['date'];
-                    // חישוב סכום כולל של ההזמנה
                     $totalSumResult = mysqli_query($con, "SELECT SUM(price * quantity) AS totalSum FROM productinorder WHERE orderNum = $orderId");
                     $totalSumRow = mysqli_fetch_array($totalSumResult);
                     $totalSum = $totalSumRow['totalSum'] ? $totalSumRow['totalSum'] : 0;
@@ -81,18 +80,25 @@ $con = OpenCon();
                         $productNames[] = $productRow['name'];
                     }
                     $productNamesString = implode(", ", $productNames);
+                    // הצגת שורה בטבלה
                     echo "<tr>";
                     echo "<td>" . $orderId . "</td>";
-                    echo "<td>" . $userName . "</td>";
                     echo "<td>" . $orderDate . "</td>";
                     echo "<td>" . $totalSum . " ₪</td>";
                     echo "<td>" . $productNamesString . "</td>";
                     echo "</tr>";
                 }
-                mysqli_close($con);
-                ?>
-            </tbody>
-        </table>
-    </div>
+            } else {
+                // אם אין הזמנות קודמות
+                echo "<tr>";
+                echo "<td colspan='4'>אין הזמנות קודמות</td>";
+                echo "</tr>";
+            }
+
+            mysqli_close($con);
+            ?>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

@@ -63,6 +63,7 @@ $user = mysqli_query($con,"SELECT * FROM users");
                     <th>מייל</td>
                     <th>טלפון</td>
                     <th>כתובת</td>
+                    <th>התחברות אחרונה</td>
                 </tr>
             </thead>
             <tbody>';
@@ -77,6 +78,7 @@ $user = mysqli_query($con,"SELECT * FROM users");
                     <td>'.$row['email']. '</td>
                     <td>'.$row['phone']. '</td>
                     <td>'.$row['address']. '</td>
+                    <td>'.$row['lastLog']. '</td>
                 </tr>';
     }
      echo ' </tbody>

@@ -6,19 +6,20 @@ $con = OpenCon();
 if(isset($_POST["addProduct"])){
 $name = $_POST['name'];
 $des = $_POST['description'];
-$img = $_POST['image'];
-echo $_POST['image'];
-$file = 'C:\xampp\htdocs\Labs\Project\Project-php\imgs\Avocado2.jpg';
-$newFile = 'C:\xampp\htdocs\Labs\Project\Project-php\imgs\test\Avocado2.jpg';
-if(!copy($file,$newFile)){
-    echo "fail to copy $file";
+$image = $_FILES['image']['name'];
+$path =  $_FILES['image']['tmp_name'];
+$newFile = 'C:\xampp\htdocs\Labs\Project\Project-php\imgs'."\\".$image;
+
+// $newFile = 'C:\xampp\htdocs\Labs\Project\Project-php\imgs\test\Avocado2.jpg';
+if(!copy($path,$newFile)){
+    echo "fail to copy $path";
 }else{
-    "copied $file into $newFile\n";
+    "copied $path into $newFile\n";
 }
 $price = $_POST['price'];
 $qun = $_POST['quantity'];
 $insert = "INSERT INTO `product`(id, `name`, `description`, `image`, `price`, `quantity`)
-             VALUES (null,'".$name."','".$des."','".$img."',$price,$qun)";
+             VALUES (null,'".$name."','".$des."','".$image."',$price,$qun)";
  mysqli_query($con, $insert);
 }
 ?>
@@ -112,7 +113,7 @@ $insert = "INSERT INTO `product`(id, `name`, `description`, `image`, `price`, `q
             </div>
             <div class="form-group">
                 <label for="image">תמונה:</label>
-                <input type="file" id="image" name="image" required>
+                <input type="file" id="image" name='image' required>
             </div>
             <div class="form-group">
                 <label for="price">מחיר:</label>

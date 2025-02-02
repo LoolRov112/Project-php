@@ -23,6 +23,7 @@ if (isset($_SESSION['fName']) && isset($_SESSION['lName'])) {
     echo "<li class='usergreet'>שלום " . $_SESSION['fName'] . ' ' . $_SESSION['lName'] . "</li>";
     echo '<li><a href="logout.php">יציאה</a></li>';
     echo '<li><a href="basket.php">סל קניות</a></li>';
+    echo '<li><a href="oldorders.php">הזמנות קודמות</a></li>';
     echo '<li><a href="contact.php">צור קשר</a></li>';
     }
     else{
